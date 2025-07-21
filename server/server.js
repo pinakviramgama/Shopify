@@ -2,14 +2,10 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 5000;
 const mongoose = require("mongoose");
+const authRouter = require("./APIs/auth/auth-routes");
+
 mongoose
-  .connect(
-    "mongodb+srv://pinakdv11:PINAK%402024@e-commerce.cwjrd5k.mongodb.net/",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect("mongodb://localhost:27017/E-Commerce")
   .then(() => {
     console.log("MongoDB connected");
   })
@@ -25,7 +21,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: "http://localhost:5173/",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     allowedHeaders: [
@@ -41,6 +37,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use("/api/auth", authRouter);
 
 app.listen(port, () => {
   console.log("server is running on port " + port);
