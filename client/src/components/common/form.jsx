@@ -18,79 +18,102 @@ function CommonForm({
   buttonText,
   isBtnDisabled,
 }) {
-  const handleChange = (name, value) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  function renderInputsByComponentType(controlItem) {
+    const value = formData[controlItem.name] || "";
+
+    switch (controlItem.componentType) {
+      case "input":
+        return (
+          <Input
+            name={controlItem.name}
+            placeholder={controlItem.placeholder}
+            id={controlItem.name}
+            type={controlItem.type}
+            value={value}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                [controlItem.name]: e.target.value,
+              })
+            }
+          />
+        );
+
+      case "textarea":
+        return (
+          <Textarea
+            name={controlItem.name}
+            placeholder={controlItem.placeholder}
+            id={controlItem.name}
+            value={value}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                [controlItem.name]: e.target.value,
+              })
+            }
+          />
+        );
+
+      case "select":
+        return (
+          <Select
+            value={value}
+            onValueChange={(val) =>
+              setFormData({
+                ...formData,
+                [controlItem.name]: val,
+              })
+            }
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue
+                placeholder={controlItem.label}
+              />
+            </SelectTrigger>
+            <SelectContent>
+              {controlItem.options?.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+
+      default:
+        return (
+          <Input
+            name={controlItem.name}
+            placeholder={controlItem.placeholder}
+            id={controlItem.name}
+            type={controlItem.type}
+            value={value}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                [controlItem.name]: e.target.value,
+              })
+            }
+          />
+        );
+    }
+  }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      {formControls.map((controlItem) => (
-        <div key={controlItem.name} className="space-y-1">
-          <Label htmlFor={controlItem.name}>{controlItem.label}</Label>
-
-          {controlItem.type === "text" && (
-            <Input
-              id={controlItem.name}
-              type="text"
-              placeholder={controlItem.placeholder}
-              value={formData[controlItem.name] || ""}
-              onChange={(e) => handleChange(controlItem.name, e.target.value)}
-            />
-          )}
-
-          {controlItem.type === "email" && (
-            <Input
-              id={controlItem.name}
-              type="email"
-              placeholder={controlItem.placeholder}
-              value={formData[controlItem.name] || ""}
-              onChange={(e) => handleChange(controlItem.name, e.target.value)}
-            />
-          )}
-
-          {controlItem.type === "password" && (
-            <Input
-              id={controlItem.name}
-              type="password"
-              placeholder={controlItem.placeholder}
-              value={formData[controlItem.name] || ""}
-              onChange={(e) => handleChange(controlItem.name, e.target.value)}
-            />
-          )}
-
-          {controlItem.type === "textarea" && (
-            <Textarea
-              id={controlItem.name}
-              placeholder={controlItem.placeholder}
-              value={formData[controlItem.name] || ""}
-              onChange={(e) => handleChange(controlItem.name, e.target.value)}
-            />
-          )}
-
-          {controlItem.type === "select" && (
-            <Select className="mb-4"
-              onValueChange={(value) => handleChange(controlItem.name, value)}
-              value={formData[controlItem.name] || ""}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={controlItem.placeholder || "Select..."} />
-              </SelectTrigger>
-              <SelectContent>
-                {controlItem.options?.map((opt) =>
-                  opt.value !== undefined && opt.label ? (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ) : null
-                )}
-              </SelectContent>
-            </Select>
-          )}
-        </div>
-      ))}
-
-      <Button type="submit" disabled={isBtnDisabled} className="w-full">
-        {buttonText}
+    <form onSubmit={onSubmit}>
+      <div className="flex flex-col gap-3">
+        {formControls.map((item) => (
+          <div className="grid w-full gap-1.5" key={item.name}>
+            <Label className="mb-1" htmlFor={item.name}>
+              {item.label}
+            </Label>
+            {renderInputsByComponentType(item)}
+          </div>
+        ))}
+      </div>
+      <Button disabled={isBtnDisabled} type="submit" className="mt-4 w-full">
+        {buttonText || "Submit"}
       </Button>
     </form>
   );

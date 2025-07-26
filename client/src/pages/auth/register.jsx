@@ -4,61 +4,71 @@ import { registerUser } from "@/store/auth-slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { toast, useSonner } from "sonner";
+import { toast } from "sonner";
 
-  function AuthRegister() {
-    const [formData, setFormData] = useState({});
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { sonner } = useSonner();
-const handleRegister = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+function AuthRegister() {
+  const [formData, setFormData] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  try {
-    const result = await dispatch(registerUser(formData));
-    const payload = result?.payload;
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-    if (payload?.success) {
-      toast.success(payload?.message || "Registered successfully!");
-      navigate("/auth/login");
-    } else if (payload?.message?.includes("E11000 duplicate key error")) {
-      toast.warning("User already exists. Redirecting to login...");
-      navigate("/auth/login");
-    } else {
-      toast.error(payload?.message || "Registration fail hogya.");
+    try {
+      const result = await dispatch(registerUser(formData));
+      const payload = result?.payload;
+
+      if (payload?.success) {
+        toast.success(payload?.message || "Registered successfully!");
+        navigate("/auth/login");
+      } else if (payload?.message?.includes("E11000 duplicate key error")) {
+        toast.warning("User already exists. Redirecting to login...");
+        navigate("/auth/login");
+      } else {
+        toast.error(payload?.message || "Registration failed.");
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.");
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
     }
-  } catch (err) {
-    toast.error("Something went wrong. Please try again.");
-    console.error(err);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-md">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Welcome to ECommerce</h1>
-          <p className="text-sm text-gray-600">Create an account to continue</p>
-          <p className="text-sm mt-2 text-gray-500">
-            Already have an account?{" "}
-            <a href="/auth/login" className="text-blue-600 hover:underline">Login</a>
-          </p>
+    <div className="container-fluid vh-100 d-flex justify-content-center align-items-center bg-light">
+      <div className="row w-100 shadow rounded-4 overflow-hidden" style={{ maxWidth: "900px" }}>
+        {/* Left Side – Welcome Section */}
+        <div className="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center bg-primary text-white p-4">
+          <h2 className="fw-bold">Welcome to ECommerce</h2>
+          <p className="text-center mt-2">We are happy to have you here. Start your journey with us.</p>
         </div>
 
-        <CommonForm
-          formControls={registerFormControls}
-          formData={formData}
-          setFormData={setFormData}
-          onSubmit={handleRegister}
-          buttonText="Register"
-          isBtnDisabled={isSubmitting}
-        />
+        {/* Right Side – Form Section */}
+        <div className="col-12 col-md-6 bg-white p-4">
+          <div className="text-center mb-3">
+            <h4 className="fw-bold">Create Account</h4>
+            <p className="text-muted">Register to continue</p>
+          </div>
 
+          <CommonForm
+            formControls={registerFormControls}
+            formData={formData}
+            setFormData={setFormData}
+            onSubmit={handleRegister}
+            buttonText="Register"
+            isBtnDisabled={isSubmitting}
+          />
 
+          <div className="text-center mt-3">
+            <small className="text-muted">
+              Already have an account?{" "}
+              <a href="/auth/login" className="text-primary">Login</a>
+            </small>
+          </div>
+        </div>
       </div>
     </div>
   );

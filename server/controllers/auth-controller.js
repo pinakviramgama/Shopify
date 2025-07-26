@@ -70,6 +70,7 @@ const login = async (req, res) => {
       success: true,
       message: "logged-in successfully",
       user: {
+        username: checkUser.userName,
         email: checkUser.email,
         role: checkUser.role,
         id: checkUser._id,
@@ -86,10 +87,26 @@ const login = async (req, res) => {
 
 //log-out
 const logout = (req, res) => {
-  res.clearCookie("token").json({
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  });
+
+  return res.status(200).json({
     success: true,
     message: "Logged Out Successfully",
   });
+};
+
+// Backend: Express + Mongoose
+const getTotalUsers = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    res.status(200).json({ success: true, totalUsers });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to count users" });
+  }
 };
 
 //auth-middleware
@@ -111,4 +128,4 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, login, authMiddleware, logout };
+module.exports = { registerUser, login, authMiddleware, logout, getTotalUsers };

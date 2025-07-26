@@ -1,0 +1,32 @@
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+
+.slide-in-sidebar {
+  animation: slideInX 0.3s forwards ease-in-out;
+}
+
+.slide-out-sidebar {
+  animation: slideOutX 0.3s forwards ease-in-out;
+}
+
+@keyframes slideInX {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slideOutX {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}

@@ -1,0 +1,100 @@
+body {
+    overflow-y: hidden;
+}
+
+.login-container {
+  height: 100vh;
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+}
+
+.left-panel {
+  flex: 1;
+  padding: 3rem;
+  background-color: transparent;
+  text-align: center;
+}
+
+.right-panel {
+  flex: 1;
+  border-radius: 10px;
+  background-color: #fff;
+  max-width: 500px;
+  margin: auto;
+}
+
+.show-password-btn {
+  position: absolute;
+  top: 65%;
+  right: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.custom-input {
+  border: 1px solid black !important;
+  border-radius: 8px;
+}
+
+button {
+    border-radius: 8px;
+}
+
+/* login.css */
+
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #007bff, #6610f2);
+  overflow: hidden;
+}
+
+/* Left welcome panel */
+.left-panel {
+  flex: 1;
+  background: transparent;
+  padding: 40px;
+  text-align: center;
+}
+
+/* Form panel (right side) */
+.right-panel {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* Custom input focus */
+.custom-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+/* Toggle show/hide password */
+.show-hide-toggle {
+  cursor: pointer;
+  font-size: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 1rem;
+  color: #007bff;
+  position: absolute;
+}
+
+/* For better spacing on small devices */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .right-panel {
+    padding: 30px 20px;
+  }
+
+  .left-panel {
+    display: none !important;
+  }
+}
